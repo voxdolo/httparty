@@ -129,11 +129,20 @@ describe HTTParty::Request do
     end
   end
 
-  it "should not attempt to parse empty responses" do
-    stub_response "", 204
-
-    @request.options[:format] = :xml
-    @request.perform.should be_nil
+  describe "with empty responses" do
+    after do
+      @request.options[:format] = :xml
+      @request.perform.should be_nil
+    end
+    it "should not attempt to parse empty responses" do
+      stub_response "", 204
+    end
+    it "should not attempt to parse nil responses" do
+      stub_response nil, 204
+    end
+    it "should not attempt to parse blank responses" do
+      stub_response " ", 201
+    end
   end
   
   it "should not fail for missing mime type" do
